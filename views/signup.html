@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="./css/normalize.css">
+  <link rel="stylesheet" href="./css/signup.css">
+  <link rel="stylesheet" href="./css/header.css">
+  <title>注册</title>
+</head>
+
+<body>
+  <header class="header">
+    <img src="./img/menu.svg" alt="">
+    <h1 class="title">注册</h1>
+  </header>
+  <div class="signup">
+    <div class="signup-top">
+      <h3 class="signup-title">注册骑士天下</h3>
+    </div>
+    <p class="signup-msg">用户名和邮箱都必需保证唯一才行!
+    </p>
+    <p class="signup-msg2">输入您的账号和密码</p>
+    <form class="signup-form">
+      <input class="nickname" name="username" type="text" placeholder="昵称" onblur="check(this.value)">
+      <input class="password" name="password" type="password" placeholder="密码">
+      <button class="btn">注册</button>
+    </form>
+  </div>
+</body>
+
+</html>
+<script src="/jquery/dist/jquery.min.js"></script>
+<script>
+  $('.btn').click((e) => {
+    e.preventDefault();
+    $.post('/signup', $('.signup-form').serialize(), data => {
+      if (data.status == 200) {
+        alert(data.msg);
+        window.location = '/signin.html';
+      }
+    }, 'json')
+  })
+  function check(value) {
+    $.ajax({
+      url: '/check',
+      type: 'post',
+      data: { username: value },
+      dataType: 'json',
+      success: function (data) {
+        if (data.status == 400) {
+          alert(data.msg);
+          $('.nickname').val("");
+        }
+      }
+    })
+  }
+</script>

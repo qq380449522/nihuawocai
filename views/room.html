@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="./css/normalize.css">
+  <link rel="stylesheet" href="./css/header.css">
+  <link rel="stylesheet" href="./css/side.css">
+  <title>首页</title>
+  <style>
+    canvas {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <img src="./img/menu.svg" alt="">
+    <h1 class="title">我的朋友</h1>
+  </header>
+
+  <section>
+    <canvas id="cas"></canvas>
+    <h1>欢迎来到你画我猜的房间</h1>
+    <ul id="ul">
+
+    </ul>
+    <input type="button" value="开始游戏" onclick="start()">
+  </section>
+
+  <!-- 侧边菜单 -->
+  <nav class="side">
+    <div class="side-box side-box-show">
+      <a>
+        <div class="side-box-user">
+          <img src="./img/avatar.jpg" alt="">
+          <h3>火骑士空空</h3>
+          <p>huoqishi@xx.com</p>
+      </a>
+      </div>
+      <ul class="menu">
+        <li class="menu-item">
+          <a href="./records.html">
+            <span>🐘</span>
+            <span>我的战绩</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <span>🐘</span>
+          <span>
+            开始游戏
+          </span>
+        </li>
+        <li class="menu-item">
+          <a href="./friend-rank.html">
+            <span>🐘</span>
+            <span>好友排行</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <span>🐘</span>
+          <span>我的好友</span>
+        </li>
+        <li class="menu-item">
+          <span>🐘</span>
+          <span>影视</span>
+        </li>
+        <li class="menu-item">
+          <span>🐘</span>
+          <span>影视</span>
+        </li>
+        <li class="menu-item">
+          <a href="javascript:vid(0)" id="loginOut">
+            <span>🐘</span>
+            <span>退出登陆</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <span>🐘</span>
+          <span>影视</span>
+        </li>
+        <li class="menu-item">
+          <span>🐘</span>
+          <span>影视</span>
+        </li>
+        <li class="menu-item">
+          <span>🐘</span>
+          <span>影视</span>
+        </li>
+        <li class="menu-item">
+          <span>🐘</span>
+          <span>影视</span>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</body>
+
+</html>
+<script src="/socket.io-client/dist/socket.io.js"></script>
+<script src="/jquery/dist/jquery.min.js"></script>
+<script>
+  var socket = io();
+  socket.on('connect',()=>{
+    console.log('浏览器建立连接');
+  })
+  var ctx = $('#cas')[0].getContext('2d');
+  $('#cas').on('touchstart', (e) => {
+    socket.emit('start',{
+      x:e.changedTouches[0].pageX,
+      y:e.changedTouches[0].pageY-49,
+    })
+  })
+  $('#cas').on('touchmove', (e) => {
+    socket.emit('move',{
+      x:e.changedTouches[0].pageX,
+      y:e.changedTouches[0].pageY-49,
+    })
+  })
+  socket.on('moveto',data=>{
+    ctx.moveTo(data.x,data.y);
+  })
+  socket.on('lineto',data=>{
+    ctx.lineTo(data.x,data.y);
+    ctx.stroke();
+  })
+</script>
